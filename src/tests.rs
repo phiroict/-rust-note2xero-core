@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests {
-    use crate::get_amount_from_title;
-    use crate::calculate_duration_in_hours_to_minutes;
-    use crate::get_name_or_contact_name;
+    use crate::n2x_core::get_amount_from_title;
+    use crate::n2x_core::calculate_duration_in_hours_to_minutes;
+    use crate::n2x_core::get_name_or_contact_name;
 
     #[test]
     fn test_desc_splitter() {
