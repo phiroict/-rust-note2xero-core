@@ -71,13 +71,22 @@ pub mod n2x_core {
     }
 
     /// Does the actual mapping, get a noted_collection and returns a collection of Xero import lines.
-    pub fn map_noted_to_xero(noted_collection: &Vec<NotedType>) -> Vec<XeroType> {
+    pub fn map_noted_to_xero(noted_collection: &Vec<NotedType>, xero_invoice_number: Option<i32>) -> Vec<XeroType> {
         let invoice_arguments: Vec<String> = std::env::args().collect();
+        let mut invoice_param = 0;
+
         if invoice_arguments.len() == 1 {
-            panic!("Please pass the starting invoice number as the start parameter. Bye now");
+            if let Some(invoice_number) = xero_invoice_number {
+                invoice_param = invoice_number;
+            } else {
+                panic!("Please pass the starting invoice number as the start parameter. Bye now");
+            }
         }
-        let invoice_counter = &invoice_arguments[1].to_string().parse::<i32>().unwrap_or(0);
-        let mut invoice_counter_cp = invoice_counter.clone();
+        if invoice_param == 0 {
+            invoice_param = invoice_arguments[1].to_string().parse::<i32>().unwrap_or(0);
+        }
+
+        let mut invoice_counter_cp = invoice_param.clone();
         let mut result: Vec<XeroType> = Vec::new();
 
 

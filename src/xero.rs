@@ -1,3 +1,5 @@
+
+
 /// The Xero invoice import definition, the field names are slightly different as it contains non-rust allowable ones.
 /// It supports the debug derive for easy debugging.
 #[derive(Debug)]
