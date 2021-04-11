@@ -13,6 +13,7 @@ pub mod n2x_core {
     use chrono::Duration;
     use chrono::Local;
     use csv::{ Reader };
+    use std::fs;
 
     use crate::noted::NotedType;
     use crate::xero::XeroType;
@@ -139,6 +140,23 @@ pub mod n2x_core {
         };
         result
     }
+
+    /// Read the file for use with the CSV component
+    pub fn read_file(path: String) -> Result<String, Box<dyn std::error::Error>> {
+        let res = fs::read_to_string(path)?;
+        Ok(res)
+    }
+
+    /// Parse the noted csv from the content read from the file.
+    /// Returns a collection of NotedType
+    pub fn parse_noted_csv(content: &String) -> Vec<NotedType> {
+        let reader = csv::Reader::from_reader(content.as_bytes());
+        let result: Vec<NotedType> = Vec::new();
+        let ret_val = fill_noted_collection(reader, result);
+        ret_val
+    }
+
+
 }
 
 
