@@ -12,6 +12,7 @@ pub mod n2x_core {
     use chrono;
     use chrono::Duration;
     use chrono::Local;
+    use csv::{ Reader };
 
     use crate::noted::NotedType;
     use crate::xero::XeroType;
@@ -114,6 +115,28 @@ pub mod n2x_core {
             invoice_counter_cp += 1;
             result.push(xero_item);
         }
+        result
+    }
+
+    pub fn fill_noted_collection(mut reader: Reader<&[u8]>, mut result: Vec<NotedType>) -> Vec<NotedType>{
+        for record in reader.records() {
+            let record = record.unwrap();
+            let item = NotedType {
+                title: record[0].to_string(),
+                create_date: record[1].to_string(),
+                duration: record[2].to_string().parse::<i16>().unwrap_or(0),
+                category: record[3].to_string(),
+                type_therapy: record[4].to_string(),
+                full_name: record[5].to_string(),
+                email: record[6].to_string(),
+                external_agenecy_contacts_data: record[7].to_string(),
+                contacts_agency_organisation: record[8].to_string(),
+                contact_association_client: record[9].to_string(),
+                contacts_email: record[10].to_string(),
+                contact_name: record[11].to_string(),
+            };
+            result.push(item);
+        };
         result
     }
 }

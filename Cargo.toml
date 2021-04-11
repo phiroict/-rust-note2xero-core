@@ -12,3 +12,4 @@ log = "0.4.14"
 simple_logger = "1.11.0"
 env_logger = "0.8.3"
 uuid =  { version = "0.8.2", features = ["serde", "v4"] }
+csv = "1.1.6"
