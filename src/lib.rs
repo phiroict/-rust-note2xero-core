@@ -1,18 +1,15 @@
-pub mod noted;
-pub mod xero;
-mod tests;
-mod logging;
 pub mod constants;
-
-
+mod logging;
+pub mod noted;
+mod tests;
+pub mod xero;
 
 pub mod n2x_core {
-    use crate::{logging, constants};
-    use log::{warn, debug, trace};
-    use chrono;
+    use crate::{constants, logging};
     use chrono::Duration;
     use chrono::Local;
-    use csv::{ Reader };
+    use csv::Reader;
+    use log::{debug, trace, warn};
     use std::fs;
 
     use crate::noted::NotedType;
@@ -21,9 +18,12 @@ pub mod n2x_core {
     /// Utility function: Calculate duration into hours, if no number in the duration, to assumes the default of 1.
     pub fn calculate_duration_in_hours_to_minutes(duration: String) -> f64 {
         match duration.parse::<f64>() {
-            Ok(val) => { val / 60. }
+            Ok(val) => val / 60.,
             Err(err) => {
-                warn!("Could not parse this string, return 1 hour as default: Error: {:?}", err);
+                warn!(
+                    "Could not parse this string, return 1 hour as default: Error: {:?}",
+                    err
+                );
                 1.
             }
         }
@@ -31,7 +31,11 @@ pub mod n2x_core {
 
     /// Utility function: Returns the first string if the second is empty, else the second string
     pub fn get_name_or_contact_name(name: String, contact_name: String) -> String {
-        trace!("Processing {} against {} returning the second if not null else only the first", name, contact_name);
+        trace!(
+            "Processing {} against {} returning the second if not null else only the first",
+            name,
+            contact_name
+        );
         if contact_name.is_empty() {
             name
         } else {
@@ -60,9 +64,13 @@ pub mod n2x_core {
         amount_intemediate.pop(); // Lose the closing bracket of the amount in the title, or it cannot be parsed
         debug!("second part is now '{}'", amount_intemediate);
         let amount = match amount_intemediate.parse::<f64>() {
-            Ok(amount) => { amount }
+            Ok(amount) => amount,
             Err(_) => {
-                warn!("Could not parse the amount {} so we take the default {}", &amount_intemediate, constants::STANDARD_RATE);
+                warn!(
+                    "Could not parse the amount {} so we take the default {}",
+                    &amount_intemediate,
+                    constants::STANDARD_RATE
+                );
                 constants::STANDARD_RATE
             }
         };
@@ -71,7 +79,10 @@ pub mod n2x_core {
     }
 
     /// Does the actual mapping, get a noted_collection and returns a collection of Xero import lines.
-    pub fn map_noted_to_xero(noted_collection: &Vec<NotedType>, xero_invoice_number: Option<i32>) -> Vec<XeroType> {
+    pub fn map_noted_to_xero(
+        noted_collection: &[NotedType],
+        xero_invoice_number: Option<i32>,
+    ) -> Vec<XeroType> {
         let invoice_arguments: Vec<String> = std::env::args().collect();
         let mut invoice_param = 0;
 
@@ -86,16 +97,21 @@ pub mod n2x_core {
             invoice_param = invoice_arguments[1].to_string().parse::<i32>().unwrap_or(0);
         }
 
-        let mut invoice_counter_cp = invoice_param.clone();
+        let mut invoice_counter_cp = invoice_param;
         let mut result: Vec<XeroType> = Vec::new();
-
 
         for noted_item in noted_collection.iter() {
             let (title, rate) = get_amount_from_title(noted_item.title.to_string());
-            let today = Local::now()  + Duration::days(constants::INVOICE_DAYS_TODAY as i64);
+            let today = Local::now() + Duration::days(constants::INVOICE_DAYS_TODAY as i64);
             let xero_item = XeroType {
-                contact_name: get_name_or_contact_name(noted_item.full_name.to_string(), noted_item.contact_name.to_string()),
-                email_address: get_name_or_contact_name(noted_item.email.to_string(), noted_item.contacts_email.to_string()),
+                contact_name: get_name_or_contact_name(
+                    noted_item.full_name.to_string(),
+                    noted_item.contact_name.to_string(),
+                ),
+                email_address: get_name_or_contact_name(
+                    noted_item.email.to_string(),
+                    noted_item.contacts_email.to_string(),
+                ),
                 poaddress_line1: "".to_string(),
                 poaddress_line2: "".to_string(),
                 poaddress_line3: "".to_string(),
@@ -107,10 +123,13 @@ pub mod n2x_core {
                 invoice_number: format!("INV-{}", invoice_counter_cp.to_string()),
                 reference: "".to_string(),
                 invoice_date: today.format("%d-%m-%Y").to_string(),
-                due_date: (today + Duration::days(constants::INVOICE_DAYS_TO_PAY as i64)).format("%d-%m-%Y").to_string(),
+                due_date: (today + Duration::days(constants::INVOICE_DAYS_TO_PAY as i64))
+                    .format("%d-%m-%Y")
+                    .to_string(),
                 inventory_item_code: constants::XERO_INVENTORY_ACCOUNT_NUMBER.to_string(),
                 description: title,
-                quantity: calculate_duration_in_hours_to_minutes(noted_item.duration.to_string()).to_string(),
+                quantity: calculate_duration_in_hours_to_minutes(noted_item.duration.to_string())
+                    .to_string(),
                 unit_amount: rate.to_string(),
                 discount: "".to_string(),
                 account_code: constants::XERO_INCOME_ACCOUNT_NUMBER.to_string(),
@@ -128,7 +147,10 @@ pub mod n2x_core {
         result
     }
 
-    pub fn fill_noted_collection(mut reader: Reader<&[u8]>, mut result: Vec<NotedType>) -> Vec<NotedType>{
+    pub fn fill_noted_collection(
+        mut reader: Reader<&[u8]>,
+        mut result: Vec<NotedType>,
+    ) -> Vec<NotedType> {
         for record in reader.records() {
             let record = record.unwrap();
             let item = NotedType {
@@ -146,7 +168,7 @@ pub mod n2x_core {
                 contact_name: record[11].to_string(),
             };
             result.push(item);
-        };
+        }
         result
     }
 
@@ -158,14 +180,9 @@ pub mod n2x_core {
 
     /// Parse the noted csv from the content read from the file.
     /// Returns a collection of NotedType
-    pub fn parse_noted_csv(content: &String) -> Vec<NotedType> {
+    pub fn parse_noted_csv(content: &str) -> Vec<NotedType> {
         let reader = csv::Reader::from_reader(content.as_bytes());
         let result: Vec<NotedType> = Vec::new();
-        let ret_val = fill_noted_collection(reader, result);
-        ret_val
+        fill_noted_collection(reader, result)
     }
-
-
 }
-
-

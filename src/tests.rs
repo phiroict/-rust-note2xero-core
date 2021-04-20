@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
-    use crate::n2x_core::get_amount_from_title;
     use crate::n2x_core::calculate_duration_in_hours_to_minutes;
+    use crate::n2x_core::get_amount_from_title;
     use crate::n2x_core::get_name_or_contact_name;
 
     #[test]
@@ -28,33 +28,32 @@ mod tests {
     #[test]
     fn test_duration_convertor() {
         let hours = calculate_duration_in_hours_to_minutes("60".to_string());
-        assert_eq!(1.,hours)
+        assert_eq!(1., hours)
     }
 
     #[test]
     fn test_duration_convertor_90mins() {
         let hours = calculate_duration_in_hours_to_minutes("90".to_string());
-        assert_eq!(1.5,hours)
+        assert_eq!(1.5, hours)
     }
 
     #[test]
     fn test_duration_convertor_135mins() {
         let hours = calculate_duration_in_hours_to_minutes("135".to_string());
-        assert_eq!(2.25,hours)
+        assert_eq!(2.25, hours)
     }
 
     #[test]
     fn test_duration_convertor_garbage_input() {
         let hours = calculate_duration_in_hours_to_minutes("fiets".to_string());
-        assert_eq!(1.,hours)
+        assert_eq!(1., hours)
     }
 
     #[test]
     fn test_duration_convertor_partial_input() {
         let hours = calculate_duration_in_hours_to_minutes("90]".to_string());
-        assert_eq!(1.,hours)
+        assert_eq!(1., hours)
     }
-
 
     #[test]
     fn test_get_name_or_contact_name() {
