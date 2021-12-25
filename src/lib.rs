@@ -120,7 +120,7 @@ pub mod n2x_core {
                 poregion: "".to_string(),
                 popostal_code: "".to_string(),
                 pocountry: "".to_string(),
-                invoice_number: format!("INV-{}", invoice_counter_cp.to_string()),
+                invoice_number: format!("INV-{}", invoice_counter_cp),
                 reference: "".to_string(),
                 invoice_date: today.format("%d-%m-%Y").to_string(),
                 due_date: (today + Duration::days(constants::INVOICE_DAYS_TO_PAY as i64))
