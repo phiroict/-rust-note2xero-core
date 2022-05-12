@@ -116,7 +116,7 @@ mod tests {
         let result = map_noted_to_xero(&noted_collection, Some(3000));
         assert_eq!(1, result.len());
         assert_eq!(
-            "This is a value; Therapy date: 2021-05-01",
+            "This is a value; Date: 2021-05-01",
             result.into_iter().nth(0).unwrap().description
         );
     }
