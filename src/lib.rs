@@ -104,10 +104,7 @@ pub mod n2x_core {
             let (title, rate) = get_amount_from_title(noted_item.title.to_string());
             let today = Local::now() + Duration::days(constants::INVOICE_DAYS_TODAY as i64);
             let xero_item = XeroType {
-                contact_name: get_name_or_contact_name(
-                    noted_item.full_name.to_string(),
-                    noted_item.contact_name.to_string(),
-                ),
+                contact_name: noted_item.full_name.to_string(),
                 email_address: get_name_or_contact_name(
                     noted_item.email.to_string(),
                     noted_item.contacts_email.to_string(),
