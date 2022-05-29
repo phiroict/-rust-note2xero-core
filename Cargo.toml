@@ -1,11 +1,11 @@
 [package]
 name = "noted2xero_core"
-version = "1.11.3"
+version = "1.11.2"
 authors = ["Philip Rodrigues <phiroict@gmail.com>"]
 edition = "2018"
 description = "The NOTED to XERO conversion"
 license = "GPL-2.0"
-repository = "git@github.com:phiroict/-rust-note2xero-core.git"
+repository = "https://github.com/phiroict/-rust-note2xero-core"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
