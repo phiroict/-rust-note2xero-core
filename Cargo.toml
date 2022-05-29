@@ -1,6 +1,6 @@
 [package]
 name = "noted2xero_core"
-version = "1.11.2"
+version = "1.11.4"
 authors = ["Philip Rodrigues <phiroict@gmail.com>"]
 edition = "2018"
 description = "The NOTED to XERO conversion"
