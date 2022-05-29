@@ -124,7 +124,7 @@ pub mod n2x_core {
                     .format("%d-%m-%Y")
                     .to_string(),
                 inventory_item_code: constants::XERO_INVENTORY_ACCOUNT_NUMBER.to_string(),
-                description: format!("{}; Date: {}", title, noted_item.create_date),
+                description: format!("{} - Date: {}", title, noted_item.create_date),
                 quantity: calculate_duration_in_hours_to_minutes(noted_item.duration.to_string())
                     .to_string(),
                 unit_amount: rate.to_string(),
