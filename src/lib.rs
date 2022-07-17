@@ -9,7 +9,7 @@ pub mod n2x_core {
     use chrono::Duration;
     use chrono::Local;
     use csv::Reader;
-    use log::{debug, trace, warn};
+    use log::{debug, info, trace, warn};
     use std::fs;
 
     use crate::noted::NotedType;
@@ -148,6 +148,7 @@ pub mod n2x_core {
         mut reader: Reader<&[u8]>,
         mut result: Vec<NotedType>,
     ) -> Vec<NotedType> {
+
         for record in reader.records() {
             let record = record.unwrap();
             let item = NotedType {
@@ -164,6 +165,7 @@ pub mod n2x_core {
                 contacts_email: record[10].to_string(),
                 contact_name: record[11].to_string(),
             };
+            info!("Processed line: {}", record[0].to_string());
             result.push(item);
         }
         result
