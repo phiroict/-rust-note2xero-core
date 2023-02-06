@@ -117,14 +117,14 @@ pub mod n2x_core {
                 poregion: "".to_string(),
                 popostal_code: "".to_string(),
                 pocountry: "".to_string(),
-                invoice_number: format!("INV-{}", invoice_counter_cp),
+                invoice_number: format!("INV-{invoice_counter_cp}"),
                 reference: "".to_string(),
                 invoice_date: today.format("%d-%m-%Y").to_string(),
                 due_date: (today + Duration::days(constants::INVOICE_DAYS_TO_PAY as i64))
                     .format("%d-%m-%Y")
                     .to_string(),
                 inventory_item_code: constants::XERO_INVENTORY_ACCOUNT_NUMBER.to_string(),
-                description: format!("{} - Date: {}", title, noted_item.create_date),
+                description: format!("{title} - Date: {}", noted_item.create_date),
                 quantity: calculate_duration_in_hours_to_minutes(noted_item.duration.to_string())
                     .to_string(),
                 unit_amount: rate.to_string(),
@@ -148,9 +148,16 @@ pub mod n2x_core {
         mut reader: Reader<&[u8]>,
         mut result: Vec<NotedType>,
     ) -> Vec<NotedType> {
-
         for record in reader.records() {
             let record = record.unwrap();
+            debug!(
+                "Processing record: {}, email: {}",
+                record[0].to_string(),
+                record[6].to_string()
+            );
+            if record.len() < 10 {
+                panic!("Could not provess this record, too short {}", &record[0]);
+            }
             let item = NotedType {
                 title: record[0].to_string(),
                 create_date: record[1].to_string(),
