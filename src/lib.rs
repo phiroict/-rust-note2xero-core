@@ -156,7 +156,7 @@ pub mod n2x_core {
                 record[6].to_string()
             );
             if record.len() < 10 {
-                panic!("Could not provess this record, too short {}", &record[0]);
+                panic!("Could not process this record, too short {}", &record[0]);
             }
             let item = NotedType {
                 title: record[0].to_string(),
